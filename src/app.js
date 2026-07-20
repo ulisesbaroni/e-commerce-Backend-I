@@ -17,6 +17,15 @@ const io = new Server(httpServer);
 
 const PORT = 8080;
 
+// Red de seguridad: evita que un error no controlado tire abajo el servidor
+process.on("unhandledRejection", (error) => {
+  console.error("Promesa rechazada sin capturar:", error);
+});
+
+process.on("uncaughtException", (error) => {
+  console.error("Excepción no capturada:", error);
+});
+
 // Handlebars
 app.engine("handlebars", engine());
 app.set("view engine", "handlebars");

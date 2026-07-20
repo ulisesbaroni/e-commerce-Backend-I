@@ -7,18 +7,26 @@ export function initSocket(io) {
 
     // Crear producto
     socket.on("crear-producto", async (data) => {
-      await ProductManager.create(data);
-      const products = await ProductManager.getAll();
-      io.emit("productos-actualizados", products);
+      try {
+        await ProductManager.create(data);
+        const products = await ProductManager.getAll();
+        io.emit("productos-actualizados", products);
+      } catch (error) {
+        socket.emit("error-producto", "No se pudo crear el producto: " + error.message);
+      }
     });
 
     // Eliminar producto
     socket.on("eliminar-producto", async (id) => {
-      if (!isValidObjectId(id)) return;
+      try {
+        if (!isValidObjectId(id)) return;
 
-      await ProductManager.remove(id);
-      const products = await ProductManager.getAll();
-      io.emit("productos-actualizados", products);
+        await ProductManager.remove(id);
+        const products = await ProductManager.getAll();
+        io.emit("productos-actualizados", products);
+      } catch (error) {
+        socket.emit("error-producto", "No se pudo eliminar el producto: " + error.message);
+      }
     });
 
     socket.on("disconnect", () => {

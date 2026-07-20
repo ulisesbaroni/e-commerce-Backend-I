@@ -13,6 +13,59 @@ a {
   color: inherit;
 }
 
+.nav-principal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  padding: 1rem;
+  background: #1a1a1a;
+}
+
+.nav-principal a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.landing {
+  padding: 1.5rem 1rem;
+}
+
+.landing-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.landing-card {
+  display: block;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.25rem;
+  text-decoration: none;
+}
+
+.landing-card h2 {
+  margin: 0 0 0.5rem;
+}
+
+.landing-card p {
+  margin: 0;
+  color: #555;
+}
+
+@media (min-width: 640px) {
+  .landing-cards {
+    flex-direction: row;
+  }
+
+  .landing-card {
+    flex: 1;
+  }
+}
+
 .lista-productos {
   list-style: none;
   margin: 0;

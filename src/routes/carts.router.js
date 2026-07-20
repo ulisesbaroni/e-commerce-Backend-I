@@ -83,6 +83,12 @@ router.put("/:cid", async (req, res) => {
       return res.status(400).json({ status: "error", message: "Se espera un array de productos" });
     }
 
+    const isValidItem = (p) => isValidObjectId(p.product) && typeof p.quantity === "number" && p.quantity >= 1;
+
+    if (!products.every(isValidItem)) {
+      return res.status(400).json({ status: "error", message: "Cada producto debe tener un id válido y una cantidad mayor a 0" });
+    }
+
     const cart = await CartManager.updateProducts(cartId, products);
 
     if (!cart) return res.status(404).json({ status: "error", message: "Carrito no encontrado" });

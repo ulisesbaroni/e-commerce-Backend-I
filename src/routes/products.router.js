@@ -4,6 +4,15 @@ import * as ProductManager from "../managers/ProductManager.js";
 
 const router = Router();
 
+// Traduce errores de validación/casteo de Mongoose a un 400 con mensaje claro
+function handleWriteError(error, res) {
+  if (error.name === "ValidationError" || error.name === "CastError") {
+    return res.status(400).json({ error: "Datos inválidos: " + error.message });
+  }
+
+  return res.status(500).json({ error: "Error interno del servidor" });
+}
+
 // GET /api/products
 router.get("/", async (req, res) => {
   try {
@@ -64,7 +73,7 @@ router.post("/", async (req, res) => {
     const product = await ProductManager.create({ title, description, code, price, status, stock, category, thumbnails });
     res.status(201).json(product);
   } catch (error) {
-    res.status(500).json({ error: "Error al crear el producto" });
+    handleWriteError(error, res);
   }
 });
 
@@ -81,7 +90,7 @@ router.put("/:pid", async (req, res) => {
 
     res.json(updated);
   } catch (error) {
-    res.status(500).json({ error: "Error al actualizar el producto" });
+    handleWriteError(error, res);
   }
 });
 

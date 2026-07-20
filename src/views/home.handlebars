@@ -1,14 +1,15 @@
-<h1>Productos</h1>
+<div class="landing">
+  <h1>Bienvenido a la tienda</h1>
+  <p>Remeras, buzos y más. Elegí por dónde empezar:</p>
 
-{{#if products.length}}
-  <ul>
-    {{#each products}}
-      <li>
-        <strong>{{this.title}}</strong> — ${{this.price}} 
-        (Stock: {{this.stock}}) — Categoría: {{this.category}}
-      </li>
-    {{/each}}
-  </ul>
-{{else}}
-  <p>No hay productos cargados.</p>
-{{/if}}
+  <div class="landing-cards">
+    <a class="landing-card" href="/products">
+      <h2>Ver productos</h2>
+      <p>Catálogo completo, con filtros y paginación</p>
+    </a>
+    <a class="landing-card" href="/realtimeproducts">
+      <h2>Demo en tiempo real</h2>
+      <p>Alta y baja de productos vía WebSockets</p>
+    </a>
+  </div>
+</div>

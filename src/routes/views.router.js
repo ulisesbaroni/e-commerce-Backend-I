@@ -18,10 +18,15 @@ async function getOrCreateCartId(req, res) {
   return cart.id;
 }
 
-// Vista estática
-router.get("/", async (req, res) => {
-  const products = await ProductManager.getAll();
-  res.render("home", { products: products.map((p) => p.toJSON()) });
+// Disponible en todas las vistas, para el link "Mi carrito" del nav
+router.use(async (req, res, next) => {
+  res.locals.cartId = await getOrCreateCartId(req, res);
+  next();
+});
+
+// Landing
+router.get("/", (req, res) => {
+  res.render("home");
 });
 
 // Vista en tiempo real
@@ -32,14 +37,12 @@ router.get("/realtimeproducts", async (req, res) => {
 
 // Listado paginado de productos
 router.get("/products", async (req, res) => {
-  const cartId = await getOrCreateCartId(req, res);
   const { limit = 10, page = 1, query, sort } = req.query;
 
   const result = await ProductManager.getPaginated({ limit, page, query, sort });
 
   res.render("products", {
     products: result.docs.map((p) => p.toJSON()),
-    cartId,
     query,
     sort,
     page: result.page,
@@ -61,9 +64,7 @@ router.get("/products/:pid", async (req, res) => {
 
   if (!product) return res.status(404).send("Producto no encontrado");
 
-  const cartId = await getOrCreateCartId(req, res);
-
-  res.render("productDetail", { product: product.toJSON(), cartId });
+  res.render("productDetail", { product: product.toJSON() });
 });
 
 // Detalle de un carrito

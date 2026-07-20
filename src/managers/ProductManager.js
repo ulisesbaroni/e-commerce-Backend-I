@@ -42,7 +42,7 @@ export async function create(data) {
 export async function update(id, data) {
   // No permitimos modificar el id
   const { id: _ignored, _id, ...safeData } = data;
-  return await Product.findByIdAndUpdate(id, safeData, { new: true });
+  return await Product.findByIdAndUpdate(id, safeData, { returnDocument: "after", runValidators: true });
 }
 
 export async function remove(id) {
