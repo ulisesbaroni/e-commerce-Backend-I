@@ -1,8 +1,10 @@
+import "dotenv/config";
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { engine } from "express-handlebars";
 import { initSocket } from "./socket.js";
+import { connectDB } from "./db.js";
 
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
@@ -33,6 +35,8 @@ app.use("/", viewsRouter);
 // Socket.IO
 initSocket(io);
 
-httpServer.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+connectDB().then(() => {
+  httpServer.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  });
 });
