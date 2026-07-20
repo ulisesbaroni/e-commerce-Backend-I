@@ -1,0 +1,42 @@
+<h1>Productos</h1>
+
+<form class="filtros" method="get" action="/products">
+  <input type="text" name="query" placeholder="Categoría o disponibilidad (true/false)" value="{{query}}" />
+  <select name="sort">
+    <option value="">Sin orden</option>
+    <option value="asc">Precio: menor a mayor</option>
+    <option value="desc">Precio: mayor a menor</option>
+  </select>
+  <button type="submit">Filtrar</button>
+</form>
+
+<ul class="lista-productos">
+  {{#each products}}
+    <li>
+      <a href="/products/{{this.id}}">
+        <strong>{{this.title}}</strong> — ${{this.price}}
+      </a>
+      <button class="add-to-cart" data-cart-id="{{../cartId}}" data-product-id="{{this.id}}">Agregar al carrito</button>
+    </li>
+  {{else}}
+    <p>No hay productos.</p>
+  {{/each}}
+</ul>
+
+<nav class="paginacion">
+  {{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}&query={{query}}&sort={{sort}}">Anterior</a>
+  {{else}}
+    <span></span>
+  {{/if}}
+
+  <span>Página {{page}} de {{totalPages}}</span>
+
+  {{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}&query={{query}}&sort={{sort}}">Siguiente</a>
+  {{/if}}
+</nav>
+
+<a href="/carts/{{cartId}}">Ver mi carrito</a>
+
+<script src="/js/cart.js"></script>

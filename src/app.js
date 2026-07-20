@@ -1,5 +1,6 @@
 import "dotenv/config";
 import express from "express";
+import cookieParser from "cookie-parser";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import { engine } from "express-handlebars";
@@ -24,6 +25,8 @@ app.set("views", "src/views");
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static("public"));
 
 // Rutas API
 app.use("/api/products", productsRouter);
