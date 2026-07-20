@@ -7,10 +7,30 @@ const router = Router();
 // GET /api/products
 router.get("/", async (req, res) => {
   try {
-    const products = await ProductManager.getAll();
-    res.json(products);
+    const { limit = 10, page = 1, query, sort } = req.query;
+
+    const result = await ProductManager.getPaginated({ limit, page, query, sort });
+
+    const buildLink = (targetPage) => {
+      if (!targetPage) return null;
+      const params = new URLSearchParams({ ...req.query, limit, page: targetPage });
+      return `${req.baseUrl}?${params.toString()}`;
+    };
+
+    res.json({
+      status: "success",
+      payload: result.docs,
+      totalPages: result.totalPages,
+      prevPage: result.prevPage,
+      nextPage: result.nextPage,
+      page: result.page,
+      hasPrevPage: result.hasPrevPage,
+      hasNextPage: result.hasNextPage,
+      prevLink: buildLink(result.prevPage),
+      nextLink: buildLink(result.nextPage),
+    });
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener productos" });
+    res.status(500).json({ status: "error", message: "Error al obtener productos" });
   }
 });
 
