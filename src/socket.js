@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import * as ProductManager from "./managers/ProductManager.js";
 
 export function initSocket(io) {
@@ -13,6 +14,8 @@ export function initSocket(io) {
 
     // Eliminar producto
     socket.on("eliminar-producto", async (id) => {
+      if (!isValidObjectId(id)) return;
+
       await ProductManager.remove(id);
       const products = await ProductManager.getAll();
       io.emit("productos-actualizados", products);

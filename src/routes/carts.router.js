@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isValidObjectId } from "mongoose";
 import * as CartManager from "../managers/CartManager.js";
 
 const router = Router();
@@ -16,7 +17,10 @@ router.post("/", async (req, res) => {
 // GET /api/carts/:cid
 router.get("/:cid", async (req, res) => {
   try {
-    const id = Number(req.params.cid);
+    const id = req.params.cid;
+
+    if (!isValidObjectId(id)) return res.status(400).json({ error: "ID inválido" });
+
     const cart = await CartManager.getById(id);
 
     if (!cart) return res.status(404).json({ error: "Carrito no encontrado" });
@@ -30,8 +34,12 @@ router.get("/:cid", async (req, res) => {
 // POST /api/carts/:cid/product/:pid
 router.post("/:cid/product/:pid", async (req, res) => {
   try {
-    const cartId = Number(req.params.cid);
-    const productId = Number(req.params.pid);
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+
+    if (!isValidObjectId(cartId) || !isValidObjectId(productId)) {
+      return res.status(400).json({ error: "ID inválido" });
+    }
 
     const cart = await CartManager.addProduct(cartId, productId);
 

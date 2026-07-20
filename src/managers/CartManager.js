@@ -1,44 +1,19 @@
-import fs from "fs/promises";
-import path from "path";
-
-const FILE_PATH = path.resolve("data/carts.json");
-
-async function readCarts() {
-  const data = await fs.readFile(FILE_PATH, "utf-8");
-  return JSON.parse(data);
-}
-
-async function writeCarts(carts) {
-  await fs.writeFile(FILE_PATH, JSON.stringify(carts, null, 2));
-}
+import Cart from "../models/cart.model.js";
 
 export async function create() {
-  const carts = await readCarts();
-
-  const lastId = carts.length > 0 ? Math.max(...carts.map((c) => c.id)) : 0;
-
-  const newCart = {
-    id: lastId + 1,
-    products: [],
-  };
-
-  carts.push(newCart);
-  await writeCarts(carts);
-  return newCart;
+  return await Cart.create({ products: [] });
 }
 
 export async function getById(id) {
-  const carts = await readCarts();
-  return carts.find((c) => c.id === id) || null;
+  return await Cart.findById(id);
 }
 
 export async function addProduct(cartId, productId) {
-  const carts = await readCarts();
-  const cart = carts.find((c) => c.id === cartId);
+  const cart = await Cart.findById(cartId);
 
   if (!cart) return null;
 
-  const existing = cart.products.find((p) => p.product === productId);
+  const existing = cart.products.find((p) => p.product.toString() === productId);
 
   if (existing) {
     // Si ya existe, sumamos una unidad
@@ -47,6 +22,6 @@ export async function addProduct(cartId, productId) {
     cart.products.push({ product: productId, quantity: 1 });
   }
 
-  await writeCarts(carts);
+  await cart.save();
   return cart;
 }

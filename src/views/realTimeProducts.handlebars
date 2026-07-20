@@ -4,7 +4,7 @@
   {{#each products}}
     <li id="producto-{{this.id}}">
       <strong>{{this.title}}</strong> — ${{this.price}}
-      <button onclick="eliminarProducto({{this.id}})">Eliminar</button>
+      <button onclick="eliminarProducto('{{this.id}}')">Eliminar</button>
     </li>
   {{/each}}
 </ul>
@@ -32,7 +32,7 @@
     lista.innerHTML = products.map((p) => `
       <li id="producto-${p.id}">
         <strong>${p.title}</strong> — $${p.price}
-        <button onclick="eliminarProducto(${p.id})">Eliminar</button>
+        <button onclick="eliminarProducto('${p.id}')">Eliminar</button>
       </li>
     `).join("");
   });

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { isValidObjectId } from "mongoose";
 import * as ProductManager from "../managers/ProductManager.js";
 
 const router = Router();
@@ -16,7 +17,10 @@ router.get("/", async (req, res) => {
 // GET /api/products/:pid
 router.get("/:pid", async (req, res) => {
   try {
-    const id = Number(req.params.pid);
+    const id = req.params.pid;
+
+    if (!isValidObjectId(id)) return res.status(400).json({ error: "ID inválido" });
+
     const product = await ProductManager.getById(id);
 
     if (!product) return res.status(404).json({ error: "Producto no encontrado" });
@@ -47,7 +51,10 @@ router.post("/", async (req, res) => {
 // PUT /api/products/:pid
 router.put("/:pid", async (req, res) => {
   try {
-    const id = Number(req.params.pid);
+    const id = req.params.pid;
+
+    if (!isValidObjectId(id)) return res.status(400).json({ error: "ID inválido" });
+
     const updated = await ProductManager.update(id, req.body);
 
     if (!updated) return res.status(404).json({ error: "Producto no encontrado" });
@@ -61,7 +68,10 @@ router.put("/:pid", async (req, res) => {
 // DELETE /api/products/:pid
 router.delete("/:pid", async (req, res) => {
   try {
-    const id = Number(req.params.pid);
+    const id = req.params.pid;
+
+    if (!isValidObjectId(id)) return res.status(400).json({ error: "ID inválido" });
+
     const deleted = await ProductManager.remove(id);
 
     if (!deleted) return res.status(404).json({ error: "Producto no encontrado" });
